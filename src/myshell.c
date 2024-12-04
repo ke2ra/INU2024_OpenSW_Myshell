@@ -2,8 +2,8 @@
 /*
     Files & directories commands
     - ls
-    - cd
-    - pwd
+    - cd use : chdir()
+    - pwd use : getcwd()
     - cat
 */
 
@@ -51,7 +51,15 @@ int main()
                 printf("Goodbye~\n");
                 exit(0);
             }
-
+            else if (strcmp(args[0], "cd") == 0) {
+                chdir(args[1]);
+            }
+            else if (strcmp(args[0], "pwd") == 0) {
+                getcwd(input, MAX_LINE);
+                printf("Current working dir: %s\n", input);
+            }
+                
+                
             // //cat command from cat_command.c
             // if (strcmp(args[0], "cat") == 0) {
             //     if (i < 2) {
