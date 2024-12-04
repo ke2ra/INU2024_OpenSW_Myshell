@@ -4,20 +4,19 @@ INC_DIR = $(PROJ_DIR)/include
 OBJ_DIR = $(PROJ_DIR)/obj
 BIN_DIR = $(PROJ_DIR)/bin
 
+OBJS = $(OBJ_DIR)/myshell.o $(OBJ_DIR)/ls_command.o $(OBJ_DIR)/cat_command.o
 
-# $@: target $^: all dependecies $<: first dependency
-$(BIN_DIR)/myshell: $(OBJ_DIR)/myshell.o | $(BIN_DIR)
-	gcc -o $@ $^ 
+$(BIN_DIR)/myshell: $(OBJS) | $(BIN_DIR)
+	gcc -o $@ $^
 
 $(BIN_DIR):
-	mkdir -p $(BIN_DIR)
+	mkdir -p $@
 
-# -c : compile only -I: include directory
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
 	gcc -c -o $@ $< -I$(INC_DIR)
 
 $(OBJ_DIR):
-	mkdir -p $(OBJ_DIR)
+	mkdir -p $@
 
 clean:
 	rm -f $(OBJ_DIR)/*.o $(BIN_DIR)/myshell

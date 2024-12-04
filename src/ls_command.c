@@ -1,31 +1,31 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <dirent.h>
+#include <sys/stat.h>
 
-int main(int argc, char *argv[]) {
-    FILE *fp;
-    char path[1035];
-    char command[50];
+void my_ls(void) {
+    DIR *dir;
+    struct dirent *entry;
 
-    // Use current directory if no directory is specified
-    const char *dir = (argc > 1) ? argv[1] : ".";
-
-    // Create the command to list directory contents
-    snprintf(command, sizeof(command), "ls %s", dir);
-
-    // Open the command for reading
-    fp = popen(command, "r");
-    if (fp == NULL) {
-        perror("popen");
-        return EXIT_FAILURE;
+    dir = opendir(".");
+    if (dir == NULL) {
+        perror("opendir");
+        exit(EXIT_FAILURE);
+    } else {
+        while ((entry = readdir(dir)) != NULL) {
+            struct stat statbuf;
+            // 파일의 정보를 가져와서 저장합니다.
+            if (stat(entry->d_name, &statbuf) == 0) {
+                // 디렉토리인지 확인합니다.
+                if (S_ISDIR(statbuf.st_mode)) {
+                    printf("%s/\n", entry->d_name);
+                } else {
+                    printf("%s\n", entry->d_name);
+                }
+            } else {
+                perror("stat");
+            }
+        }
+        closedir(dir);
     }
-
-    // Read the output a line at a time and print it
-    while (fgets(path, sizeof(path), fp) != NULL) {
-        printf("%s", path);
-    }
-
-    // Close the command
-    pclose(fp);
-
-    return EXIT_SUCCESS;
 }
